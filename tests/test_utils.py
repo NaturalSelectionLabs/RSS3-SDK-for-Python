@@ -54,11 +54,24 @@ def persona():
 @pytest.fixture()
 def rss3_content():
     return {'id': '0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb', '@version': 'rss3.io/version/v0.1.0',
-            'date_created': '2021-07-10T12:34:55.564Z', 'date_updated': '2021-07-10T12:34:55.587Z',
-            'signature': '0x1159c855664795f2b92371dec5a03db1c0405de6116b53a67e19a712dce07c60280cbebc922febdb219787c66ac5dab2e628191b5f54c3067e3f2c12b5c1ee151b',
-            'profile': {'name': 'Leetao', 'avatar': ['http://q1.qlogo.cn/g?b=qq&nk=501257367&s=5'],
-                        'bio': 'Talk is cheap,show me the code!', 'tags': ['python', 'ts', 'flutter', 'go', 'java'],
-                        'signature': '0xea92e64bcd69345c809a964619c5a3dad22d26b2af104838569565e84b337a29635b4039fcdbac81bb4a306764ff30162f56464119a7332f5336e68d550063681c'}}
+            'date_created': '2021-07-10T12:34:55.564Z', 'date_updated': '2021-07-10T14:22:05.989Z',
+            'signature': '0x965cbe5fb5ef1295c21a666ac993f112c4ca1ac1e637b5d34f04e9b8cff1cb267c58a4be0d9d79da8324a14c0c315b88c2bde97ee503b69a3082b83214508a2d1b',
+            'profile': {'avatar': ['http://q1.qlogo.cn/g?b=qq&nk=501257367&s=5'], 'name': 'Leetao',
+                        'tags': ['Python', 'TypeScript', 'Flutter', 'Go', 'Java'],
+                        'bio': 'Talk is cheap,show me the code',
+                        'signature': '0x442e7caacdb5ddcf3dec01d3ac37d40fe830909d9b8b97539b7668b6b862cbdb7e228d7d8cb20db12107b934a6b71b5334c9870ebb9dd331c510f156e2d2a1f21c'},
+            'items': [{'authors': ['0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb'],
+                       'summary': '@rss3_  all by Third-party sdk😍', 'tags': ['Re: ID', 'Twitter'], 'contents': [
+                    {'address': ['https://gateway.pinata.cloud/ipfs/QmRimTYATExzVhRHnMbWotW3EDRFor25dbboEXMQvs3UXW'],
+                     'mime_type': 'image/png', 'size_in_bytes': '415703'}],
+                       'id': '0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb-item-1',
+                       'date_published': '2021-07-10T14:22:05.981Z', 'date_modified': '2021-07-10T14:22:05.981Z',
+                       'signature': '0x7ed8efb2ca1282df766ca7565cb6a0646fe85cb83f6f0d0ad326774cf7353ca96ffbbccbd54ccd461609605ed181e2db10c8441d97df9e610bf3a69747294d5e1b'},
+                      {'authors': ['0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb'],
+                       'id': '0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb-item-0', 'title': 'Hello RSS3',
+                       'summary': 'This is a message from Leetao', 'date_published': '2021-07-10T13:55:00.754079',
+                       'date_modified': '2021-07-10T13:55:00.754079',
+                       'signature': '0xabac000da14e2043707065a6300bd032631311e6183665ece2f39d3bebe98e5d775fa33166a1c711d6b1e5c272a841e207346303bf991af7c2e061365ac4d9d41c'}]}
 
 
 def test_sign(rss3_item_without_sign, rss3_item_sign, private_key):

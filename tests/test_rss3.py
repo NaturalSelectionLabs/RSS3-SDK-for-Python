@@ -41,17 +41,26 @@ async def test_profile_patch(rss3):
     assert new_profile is not None
 
 
-@pytest.mark.skipif(reason='not need')
+# @pytest.mark.skipif(reason='not need')
 @pytest.mark.asyncio
 async def test_items_get(rss3):
     items = await rss3.items.get(rss3.persona.id)
     assert len(items) > 0
 
 
+@pytest.mark.skipif(reason='not need')
 @pytest.mark.asyncio
 async def test_item_post(rss3):
-    item_input = RSS3ItemInput(title='Hello RSS3', summary='This is a message from Leetao')
+    item_input = RSS3ItemInput(title='Hello Everyone', summary='This is a test message from Leetao ')
     item = await rss3.item.post(item_input)
+    assert item is not None
+
+
+@pytest.mark.asyncio
+async def test_item_patch(rss3):
+    item_input = RSS3ItemInput(id='0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb-item-1', title='Item patch test',
+                               summary='@rss3_  all by Third-party sdk')
+    item = await rss3.item.patch(item_input)
     assert item is not None
 
 
