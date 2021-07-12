@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 """
 @File    :   persona.py    
-@Contact :   leetao@email.cn
+@Contact :   leetao94cn@gmail.com
 @Description：
 @Modify Time      @Author    @Version    @Description
 ------------      -------    --------    -----------
