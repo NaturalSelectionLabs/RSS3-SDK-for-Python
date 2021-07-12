@@ -29,12 +29,15 @@ class Item:
 
     async def get_position(self, item_id: str) -> Dict:
         file_id = self.rss3.persona.id
+        print(f'file_id: {file_id}')
         file_ = await self.rss3.file.get_content(file_id)
-        if item_id not in file_:
+        items = file_['items']
+        file_items_id_list = [item['id'] for item in items]
+        if item_id not in file_items_id_list:
             parsed = utils.parse(item_id)
             file_id = f'{self.rss3.persona.id}-items-{parsed["index"] // ITEM_PAGE_SIZE}'
             file_ = await self.rss3.file.get_content(file_id)
-        index = list(file_.keys()).index(item_id)
+        index = file_items_id_list.index(item_id)
         return {
             'file': file_,
             'index': index
@@ -85,9 +88,9 @@ class Item:
         position = await self.get_position(item_in.id)
         if position['index'] != -1:
             new_date = utils.iso_format_string()
-            item = RSS3Item.from_instance(RSS3ItemInput)
+            item = RSS3Item.from_instance(item_in)
             item.date_modified = new_date
             item.signature = utils.sign(IRSS3ItemSchema.dump(item), self.rss3.persona.private_key)
-            position['file']['items'][position['index']] = item
+            position['file']['items'][position['index']] = IRSS3ItemSchema.dump(item)
             self.rss3.file.set_content(position['file'])
             return position['file']['items'][position['index']]

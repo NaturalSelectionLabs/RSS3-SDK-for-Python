@@ -23,9 +23,6 @@ class RSS3ItemInput:
     def from_instance(cls, instance):
         return cls(**dataclasses.asdict(instance))
 
-    class Meta:
-        ordered = True
-
 
 @dataclass
 class RSS3Item(BaseSchema, RSS3ItemInput):
@@ -36,9 +33,6 @@ class RSS3Item(BaseSchema, RSS3ItemInput):
                                                                           "validate": marshmallow.validate.Length(
                                                                               max=ITEM_PAGE_SIZE)})
     signature: str = field(default_factory=str)
-
-    class Meta:
-        ordered = True
 
 
 @dataclass
@@ -67,7 +61,7 @@ class RSS3Base:
 
 
 @dataclass
-class RSS3Items(BaseSchema,RSS3Base):
+class RSS3Items(BaseSchema, RSS3Base):
     id: str = field(default_factory=str)
     signature: str = field(default_factory=str)
 

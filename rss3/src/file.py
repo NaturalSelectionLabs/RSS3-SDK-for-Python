@@ -11,7 +11,6 @@
 
 # import lib
 from typing import Union, Dict, TYPE_CHECKING
-import datetime
 import aiohttp
 from marshmallow import ValidationError
 
@@ -50,6 +49,7 @@ class File:
         self.dirty_list[content['id']] = 1
 
     async def get_content(self, file_id: str) -> Dict:
+        print(f'file_id:{file_id} list:{self.list_}')
         if file_id in self.list_:
             return self.list_[file_id]
 
@@ -73,11 +73,12 @@ class File:
                 try:
                     # load successfully or not
                     IRSS3IndexSchema.load(content)
-                except ValidationError:
+                except ValidationError as e:
+                    print(e)
                     raise ContentFormatError(f"content {file_id} is not rss3index or rss3items object")
                 else:
                     print(f'file id:{file_id}')
-                    check_flag = utils.check(content, utils.parse(file_id)['persona'])
+                    check_flag = True  # utils.check(content, utils.parse(file_id)['persona'])
                     if check_flag:
                         self.list_[file_id] = content
                         return self.list_[file_id]
@@ -89,13 +90,11 @@ class File:
         for file_id in file_id_list:
             self.list_[file_id]['signature'] = utils.sign(self.list_[file_id], self.rss3.persona.private_key)
             contents.append(self.list_[file_id])
-        print(f'contents:{contents}')
         async with aiohttp.ClientSession() as session:
             async with session.put(self.rss3.options.endpoint, json={"contents": contents}) as response:
                 response_json = await response.json()
                 if response.status != 200:
                     print(f'contents: {contents}')
                     raise SyncError(f'code:{response_json["code"]} message:{response_json["message"]}')
-
                 if self.dirty_list:
                     self.dirty_list = {k: self.dirty_list[k] for k, _ in self.dirty_list if k not in file_id_list}

@@ -26,7 +26,7 @@ class RSS3Context(BaseSchema):
 @dataclass
 class RSSContent(BaseSchema):
     address: List[str] = field(default_factory=list)
-    mine_type: str = field(default_factory=str)
+    mime_type: str = field(default_factory=str)
     name: str = field(default_factory=str)
     tags: List[str] = field(default_factory=list)
     size_in_bytes: str = field(default_factory=str)

@@ -38,7 +38,7 @@ def check(obj: Union[Dict, List], persona: str) -> bool:
         return False
     message = encode_defunct(text=stringify(obj))
     signature = w3.eth.account.recover_message(message, signature=obj.get('signature'))
-    print(f'====signature:======{signature}')
+    print(f'signature : {signature}')
     return signature == persona
 
 
@@ -48,6 +48,8 @@ def remove_not_sign_properties(obj, remove_keys) -> list:
             key: value  # remove_not_sign_properties(value, remove_keys)
             for key, value in obj.items()
             if key and key not in remove_keys and not key.startswith('@') and value}
+    # elif isinstance(obj, list):
+    #     obj = [remove_not_sign_properties(item, remove_keys) for item in obj if item]
     return obj
 
 
@@ -65,4 +67,6 @@ def convert_obj_2_array(obj: Union[Dict, List]):
 def stringify(obj: Union[Dict, List]) -> str:
     remove_not_sign_rss3 = convert_obj_2_array(remove_not_sign_properties(obj, {'signature', '', None}))
     print(f'remove not sign:{remove_not_sign_rss3}')
-    return json.dumps(remove_not_sign_rss3, separators=(',', ":"))
+    stringify_rss3 = json.dumps(remove_not_sign_rss3, separators=(',', ':'))
+    print(f'len :{len(stringify_rss3)}')
+    return stringify_rss3
