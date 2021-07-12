@@ -45,11 +45,11 @@ def check(obj: Union[Dict, List], persona: str) -> bool:
 def remove_not_sign_properties(obj, remove_keys) -> list:
     if isinstance(obj, dict):
         obj = {
-            key: value  # remove_not_sign_properties(value, remove_keys)
+            key: remove_not_sign_properties(value, remove_keys)
             for key, value in obj.items()
             if key and key not in remove_keys and not key.startswith('@') and value}
-    # elif isinstance(obj, list):
-    #     obj = [remove_not_sign_properties(item, remove_keys) for item in obj if item]
+    elif isinstance(obj, list):
+        obj = [remove_not_sign_properties(item, remove_keys) for item in obj if item]
     return obj
 
 

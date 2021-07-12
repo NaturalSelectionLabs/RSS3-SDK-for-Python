@@ -29,7 +29,6 @@ class Item:
 
     async def get_position(self, item_id: str) -> Dict:
         file_id = self.rss3.persona.id
-        print(f'file_id: {file_id}')
         file_ = await self.rss3.file.get_content(file_id)
         items = file_['items']
         file_items_id_list = [item['id'] for item in items]

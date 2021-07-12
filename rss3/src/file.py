@@ -78,7 +78,7 @@ class File:
                     raise ContentFormatError(f"content {file_id} is not rss3index or rss3items object")
                 else:
                     print(f'file id:{file_id}')
-                    check_flag = True  # utils.check(content, utils.parse(file_id)['persona'])
+                    check_flag = utils.check(content, utils.parse(file_id)['persona'])
                     if check_flag:
                         self.list_[file_id] = content
                         return self.list_[file_id]
