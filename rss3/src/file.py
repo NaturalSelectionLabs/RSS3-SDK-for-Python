@@ -34,7 +34,7 @@ class File:
 
     def new(self, file_id: str):
         now_date = utils.iso_format_string()
-        self.set_content({
+        self.set({
             'id': file_id,
             '@version': VERSION,
             'date_created': now_date,
@@ -43,12 +43,12 @@ class File:
         })
         return self.list_[file_id]
 
-    def set_content(self, content: Union[RSS3Index, RSS3Items, Dict]):
+    def set(self, content: Union[RSS3Index, RSS3Items, Dict]):
         content['date_updated'] = utils.iso_format_string()
         self.list_[content['id']] = content
         self.dirty_list[content['id']] = 1
 
-    async def get_content(self, file_id: str) -> Dict:
+    async def get(self, file_id: str) -> Dict:
         print(f'file_id:{file_id} list:{self.list_}')
         if file_id in self.list_:
             return self.list_[file_id]

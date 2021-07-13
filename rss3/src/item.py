@@ -29,13 +29,13 @@ class Item:
 
     async def get_position(self, item_id: str) -> Dict:
         file_id = self.rss3.persona.id
-        file_ = await self.rss3.file.get_content(file_id)
+        file_ = await self.rss3.file.get(file_id)
         items = file_['items']
         file_items_id_list = [item['id'] for item in items]
         if item_id not in file_items_id_list:
             parsed = utils.parse(item_id)
             file_id = f'{self.rss3.persona.id}-items-{parsed["index"] // ITEM_PAGE_SIZE}'
-            file_ = await self.rss3.file.get_content(file_id)
+            file_ = await self.rss3.file.get(file_id)
         index = file_items_id_list.index(item_id)
         return {
             'file': file_,
@@ -50,7 +50,7 @@ class Item:
 
     async def post(self, item_in: RSS3ItemInput):
 
-        file_ = await self.rss3.file.get_content(self.rss3.persona.id)
+        file_ = await self.rss3.file.get(self.rss3.persona.id)
         if 'items' not in file_:
             file_['items'] = []
 
@@ -80,7 +80,7 @@ class Item:
 
             file_['items'] = file_['items'][:1]
             file_['items_next'] = new_id
-        self.rss3.file.set_content(file_)
+        self.rss3.file.set(file_)
         return item
 
     async def patch(self, item_in: RSS3ItemInput):
@@ -91,5 +91,5 @@ class Item:
             item.date_modified = new_date
             item.signature = utils.sign(IRSS3ItemSchema.dump(item), self.rss3.persona.private_key)
             position['file']['items'][position['index']] = IRSS3ItemSchema.dump(item)
-            self.rss3.file.set_content(position['file'])
+            self.rss3.file.set(position['file'])
             return position['file']['items'][position['index']]

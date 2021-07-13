@@ -34,14 +34,6 @@ class RSSContent(BaseSchema):
 
 
 @dataclass
-class RSS3Link(BaseSchema):
-    type_: str = field(default_factory=str, metadata={"data_key": "type"})
-    tags: List[str] = field(default_factory=list)
-    list_: List[str] = field(default_factory=list, metadata={"data_key": "list"})
-    signature: str = field(default_factory=str)
-
-
-@dataclass
 class RSS3BackLink(BaseSchema):
     type_: str = field(default_factory=str, metadata={"data_key": "type"})
     list_: str = field(default_factory=str, metadata={"data_key": "list"})

@@ -39,4 +39,4 @@ class Persona:
         return await self.rss3.file.sync()
 
     async def raw(self, file_id: str) -> Dict:
-        return await self.rss3.file.get_content(file_id)
+        return await self.rss3.file.get(file_id)

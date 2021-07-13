@@ -24,7 +24,7 @@ class Items:
         self.rss3 = rss3
 
     async def get(self, file_id: str) -> Dict:
-        file_ = await self.rss3.file.get_content(file_id)
+        file_ = await self.rss3.file.get(file_id)
         return {
             'items': file_.get("items", []),
             'items_next': file_.get("items_next", [])

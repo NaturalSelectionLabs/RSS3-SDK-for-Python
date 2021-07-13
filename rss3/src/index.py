@@ -15,6 +15,7 @@ from marshmallow_dataclass import dataclass
 
 from .item import Item
 from .items import Items
+from .link import Link
 from .links import Links
 from .persona import Persona
 from .file import File as File_
@@ -35,6 +36,7 @@ class RSS3:
     items: Items
     items: Item
     links: Links
+    link: Link
 
     def __init__(self, options: IOptions):
         self.options = options
@@ -44,5 +46,6 @@ class RSS3:
         self.items = Items(self)
         self.item = Item(self)
         self.links = Links(self)
+        self.link = Link(self)
 
 

@@ -53,6 +53,22 @@ class RSS3Profile(RSS3ProfileInput):
 
 
 @dataclass
+class RSS3LinkInput(BaseSchema):
+    type_: str = field(default_factory=str, metadata={"data_key": "type"})
+    tags: List[str] = field(default_factory=list)
+    list_: List[str] = field(default_factory=list, metadata={"data_key": "list"})
+
+    @classmethod
+    def from_instance(cls, instance):
+        return cls(**dataclasses.asdict(instance))
+
+
+@dataclass
+class RSS3Link(RSS3LinkInput):
+    signature: str = field(default_factory=str)
+
+
+@dataclass
 class RSS3Base:
     id: str = field(default_factory=str)
     date_created: str = field(default_factory=str)

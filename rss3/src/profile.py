@@ -28,15 +28,15 @@ class Profile:
     async def get(self, persona_id: str = None) -> Dict:
         if persona_id is None:
             persona_id = self.rss3.persona.id
-        file_ = await self.rss3.file.get_content(persona_id)
+        file_ = await self.rss3.file.get(persona_id)
         return file_.get("profile", None)
 
     async def patch(self, profile_in: RSS3ProfileInput) -> Dict:
-        file_ = await self.rss3.file.get_content(self.rss3.persona.id)
+        assert profile_in is not None
+        file_ = await self.rss3.file.get(self.rss3.persona.id)
         profile_instance = RSS3Profile.from_instance(profile_in)
         profile = IRSS3ProfileSchema.dump(profile_instance)
-        assert profile is not None
         profile['signature'] = utils.sign(profile, self.rss3.persona.private_key)
         file_['profile'] = profile
-        self.rss3.file.set_content(file_)
+        self.rss3.file.set(file_)
         return file_['profile']
