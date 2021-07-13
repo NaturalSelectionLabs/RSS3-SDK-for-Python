@@ -13,7 +13,7 @@
 
 from typing import TYPE_CHECKING, List, Dict, Tuple
 
-from rss3.interface import RSS3LinkInput
+from ..interface import RSS3LinkInput
 
 if TYPE_CHECKING:
     from .index import RSS3

@@ -10,8 +10,8 @@
 """
 
 # import lib
-from rss3.interface import RSS3ProfileInput, RSS3Profile, IRSS3ProfileSchema
-from rss3.src import utils
+from ..interface import RSS3ProfileInput, RSS3Profile, IRSS3ProfileSchema
+from .. import utils
 from typing import Dict, TYPE_CHECKING
 
 

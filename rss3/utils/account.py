@@ -67,6 +67,6 @@ def convert_obj_2_array(obj: Union[Dict, List]):
 def stringify(obj: Union[Dict, List]) -> str:
     remove_not_sign_rss3 = convert_obj_2_array(remove_not_sign_properties(obj, {'signature', '', None}))
     print(f'remove not sign:{remove_not_sign_rss3}')
-    stringify_rss3 = json.dumps(remove_not_sign_rss3, separators=(',', ':'))
+    stringify_rss3 = json.dumps(remove_not_sign_rss3, separators=(',', ':'), ensure_ascii=False)
     print(f'len :{len(stringify_rss3)}')
     return stringify_rss3

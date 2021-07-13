@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING, Dict
 if TYPE_CHECKING:
     from .index import RSS3
 
-from .utils import private_key_to_address, create
+from ..utils import private_key_to_address, create
 
 
 class Persona:

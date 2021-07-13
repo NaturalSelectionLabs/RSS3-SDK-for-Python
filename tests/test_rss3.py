@@ -10,16 +10,15 @@
 """
 import pytest
 
-import rss3.src.index as index_
-from rss3 import RSS3ProfileInput, RSS3ItemInput
+from rss3 import RSS3ProfileInput, RSS3ItemInput, RSS3, IOptions
 import os
 
 
 @pytest.fixture()
 def rss3():
-    options = index_.IOptions(endpoint='https://hub.rss3.io',
-                              private_key=os.getenv("private_key"))
-    rss3 = index_.RSS3(options=options)
+    options = IOptions(endpoint='https://hub.rss3.io',
+                       private_key=os.getenv("private_key"))
+    rss3 = RSS3(options=options)
     return rss3
 
 
@@ -58,7 +57,7 @@ async def test_item_post(rss3):
 
 @pytest.mark.asyncio
 async def test_item_patch(rss3):
-    item_input = RSS3ItemInput(id='0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb-item-1', title='Item patch test',
+    item_input = RSS3ItemInput(id='0xb4B4ca72fa7c24a53f169468c1938966f8ACEbdb-item-1', title='Item patch test again',
                                summary='@rss3_  all by Third-party sdk')
     item = await rss3.item.patch(item_input)
     assert item is not None

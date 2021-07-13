@@ -11,5 +11,13 @@
 
 # import lib
 
-from .src import *
+from .src.exceptions import *
+from .src.file import File
+from .src.link import Link
+from .src.links import Links
+from .src.item import Item
+from .src.items import Items
+from .src.persona import Persona
+from .src.profile import Profile
+from .src.index import RSS3, IOptions
 from .interface import *

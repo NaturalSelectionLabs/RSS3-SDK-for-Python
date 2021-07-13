@@ -12,8 +12,8 @@
 # import lib
 from typing import TYPE_CHECKING
 
-from rss3.interface import RSS3LinkInput, RSS3Link, IRSS3LinkSchema
-from rss3.src import utils
+from ..interface import RSS3LinkInput, RSS3Link, IRSS3LinkSchema
+from .. import utils
 
 if TYPE_CHECKING:
     from .index import RSS3

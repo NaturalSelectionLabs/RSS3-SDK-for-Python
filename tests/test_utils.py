@@ -11,7 +11,7 @@
 
 # import lib
 import pytest
-from rss3.src import utils
+from rss3 import utils
 import hashlib
 import os
 

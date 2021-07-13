@@ -10,9 +10,9 @@
 """
 
 # import lib
-from rss3.interface import RSS3ItemInput, RSS3Item, IRSS3ItemSchema
-from rss3.src import utils
-from rss3.settings import ITEM_PAGE_SIZE
+from ..interface import RSS3ItemInput, RSS3Item, IRSS3ItemSchema
+from .. import utils
+from ..settings import ITEM_PAGE_SIZE
 
 from typing import Dict, TYPE_CHECKING
 

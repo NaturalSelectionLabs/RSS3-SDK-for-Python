@@ -14,10 +14,10 @@ from typing import Union, Dict, TYPE_CHECKING
 import aiohttp
 from marshmallow import ValidationError
 
-from rss3.src.exceptions import SignatureNotMatchError, ContentFormatError, SyncError
-from rss3.settings import VERSION
-from rss3.src import utils
-from rss3.interface import RSS3Items, RSS3Index, IRSS3IndexSchema
+from .exceptions import SignatureNotMatchError, ContentFormatError, SyncError
+from ..settings import VERSION
+from .. import utils
+from ..interface import RSS3Items, RSS3Index, IRSS3IndexSchema
 
 if TYPE_CHECKING:
     from .index import RSS3
