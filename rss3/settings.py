@@ -13,4 +13,4 @@
 
 ITEM_PAGE_SIZE: int = 100
 MAX_VALUE_LENGTH: int = 280
-VERSION: str = "rss3.io/version/v0.1.0"
+VERSION: str = "rss3.io/version/v0.1.1"
