@@ -31,7 +31,6 @@ class Persona:
         else:
             account = create()
             self.private_key = account.key.hex()
-            print(f'private key:{self.private_key}')
             self.id = account.address
             self.rss3.file.new(self.id)
 

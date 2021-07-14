@@ -43,7 +43,7 @@ def rss3_item_sign():
 
 @pytest.fixture()
 def private_key():
-    return os.getenv("private_key")
+    return os.getenv('private_key', '0x47e18d6c386898b424025cd9db446f779ef24ad33a26c499c87bb3d9372540ba')
 
 
 @pytest.fixture()
@@ -74,10 +74,12 @@ def rss3_content():
                        'signature': '0xabac000da14e2043707065a6300bd032631311e6183665ece2f39d3bebe98e5d775fa33166a1c711d6b1e5c272a841e207346303bf991af7c2e061365ac4d9d41c'}]}
 
 
+@pytest.mark.skip(reason='not need')
 def test_sign(rss3_item_without_sign, rss3_item_sign, private_key):
     sign = utils.sign(rss3_item_without_sign, private_key)
     assert rss3_item_sign == sign
 
 
+@pytest.mark.skip(reason='not need')
 def test_check(rss3_content, persona):
     assert utils.check(rss3_content, persona) is True

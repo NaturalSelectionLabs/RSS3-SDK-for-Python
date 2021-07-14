@@ -16,7 +16,6 @@ from ..settings import ITEM_PAGE_SIZE
 
 from typing import Dict, TYPE_CHECKING
 
-
 if TYPE_CHECKING:
     from rss3.src.index import RSS3
 
@@ -30,12 +29,16 @@ class Item:
     async def get_position(self, item_id: str) -> Dict:
         file_id = self.rss3.persona.id
         file_ = await self.rss3.file.get(file_id)
+        assert 'items' in file_
         items = file_['items']
         file_items_id_list = [item['id'] for item in items]
         if item_id not in file_items_id_list:
             parsed = utils.parse(item_id)
             file_id = f'{self.rss3.persona.id}-items-{parsed["index"] // ITEM_PAGE_SIZE}'
             file_ = await self.rss3.file.get(file_id)
+            assert 'items' in file_
+            items = file_['items']
+            file_items_id_list = [item['id'] for item in items]
         index = file_items_id_list.index(item_id)
         return {
             'file': file_,
@@ -49,13 +52,11 @@ class Item:
         return None
 
     async def post(self, item_in: RSS3ItemInput):
-
         file_ = await self.rss3.file.get(self.rss3.persona.id)
         if 'items' not in file_:
             file_['items'] = []
 
         id_ = 0
-        print(f'items: {file_["items"]}')
 
         if file_['items']:
             id_ = utils.parse(file_['items'][0]['id'])['index'] + 1
