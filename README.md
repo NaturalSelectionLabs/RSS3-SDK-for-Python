@@ -1,6 +1,26 @@
-# RSS3
+<p align="center">
+ <h1 align="center">RSS3</h1>
+ <p align="center">
 
-A python version of the reference [RSS3 JavaScript SDK](https://github.com/NaturalSelectionLabs/RSS3-SDK-for-JavaScript), which means  the usage should be pretty similar between both.
+  A python version of the reference [RSS3 JavaScript SDK](https://github.com/NaturalSelectionLabs/RSS3-SDK-for-JavaScript), which means  the usage should be pretty similar between both.
+
+  <a href="https://img.shields.io/pypi/dd/rss3.svg?color=brightgreen">
+    <img src="https://img.shields.io/pypi/dd/rss3.svg?color=brightgreen" />
+  </a>
+  <a href="https://img.shields.io/pypi/dw/rss3.svg?color=brightgreen">
+    <img src="https://img.shields.io/pypi/dw/rss3.svg?color=brightgreen"/>
+  </a>
+  <a href="https://img.shields.io/pypi/dm/rss3.svg?color=brightgreen">
+    <img src="https://img.shields.io/pypi/dm/rss3.svg?color=brightgreen"/>
+  </a>
+  <a href="https://img.shields.io/pypi/pyversions/rss3.svg">
+    <img src="https://img.shields.io/pypi/pyversions/rss3.svg">
+  </a>
+  <a href="https://img.shields.io/pypi/l/rss3.svg">
+    <img src="https://img.shields.io/pypi/l/rss3.svg"/>
+  </a>
+ </p>
+</p>
 
 ## Installation and usage
 
