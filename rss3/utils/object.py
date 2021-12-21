@@ -2,8 +2,20 @@ import copy
 import json
 
 
-def remove_empty(obj):
-    ...
+def remove_empty(obj, father=None):
+    if isinstance(obj, dict):
+        keys = list(obj.keys())
+    else:
+        keys = list(range(len(obj)))
+
+    for key in keys:
+        if not obj[key]:
+            del obj[key]
+        elif isinstance(obj[key], (dict, list)):
+            remove_empty(obj[key], {"obj": obj, "key": key})
+
+    if len(obj) == 0 and father:
+        del father["obj"][father["key"]]
 
 
 def stringify_obj(obj):
@@ -34,4 +46,14 @@ def _obj_to_array(obj):
             result.append([key, _obj_to_array(obj[key])])
         else:
             result.append([key, obj[key]])
+    return result
+
+
+def remove_custom_properties(obj):
+    result = copy.deepcopy(obj)
+    for key in list(result.keys()):
+        if key.startswith("_"):
+            del result[key]
+        elif isinstance(result[key], dict):
+            result[key] = remove_custom_properties(result[key])
     return result
