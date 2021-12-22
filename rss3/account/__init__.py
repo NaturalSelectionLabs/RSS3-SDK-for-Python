@@ -1,6 +1,7 @@
 import asyncio
 
 from eth_account.account import Account as ETHAccount
+from eth_account.hdaccount import ETHEREUM_DEFAULT_PATH
 from eth_account.messages import encode_defunct
 
 from rss3.account.sign_agent import SignAgent
@@ -27,7 +28,7 @@ class Account:
             self.address = main.options["address"]
         else:
             self._signer, self.mnemonic = ETHAccount.create_with_mnemonic(
-                account_path=main.options["mnemonic_path"]
+                account_path=main.options.get("mnemonic_path", ETHEREUM_DEFAULT_PATH)
             )
             self._main.files.new(self._signer.address)
 
