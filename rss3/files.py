@@ -21,7 +21,6 @@ class File:
 
     def new(self, file_id):
         now_date = _isoformat_now()
-        print(now_date)
         self.set(
             {
                 "id": file_id,
@@ -115,7 +114,7 @@ class File:
 
     def set(self, content):
         utils_object.remove_empty(content)
-        content["date_updated"] = ""
+        content["date_updated"] = _isoformat_now()
         content["version"] = config.version
         if utils_check.file_size(content):
             self._list[content["id"]] = content
@@ -128,11 +127,14 @@ class File:
             for file_id in list(self._list):
                 if key in file_id:
                     del self._list[file_id]
+                    del self._dirty_list[file_id]
         else:
             del self._list[key]
+            del self._dirty_list[key]
 
     async def sync(self):
         async def _sign(file_id):
+            print(self._list)
             content = self._list[file_id]
             await self._main.account.sign(content)
             if "auto" in content:
@@ -142,12 +144,18 @@ class File:
         file_ids = list(self._dirty_list.keys())
 
         coros = []
-        for file_id in file_ids:
-            coros.append(_sign(file_id))
+        for f_id in file_ids:
+            coros.append(_sign(f_id))
 
-        results = await asyncio.gather(*coros)
-        async with httpx.AsyncClient() as client:
-            await client.put(self._main.options.endpoint, json={"contents": contents})
-
-        for file_id in file_ids:
-            del self._dirty_list[file_id]
+        contents = await asyncio.gather(*coros)
+        try:
+            async with httpx.AsyncClient() as client:
+                await client.put(
+                    self._main.options["endpoint"],
+                    json={"files": contents},
+                )
+        except httpx.HTTPError:
+            ...
+        else:
+            for f_id in file_ids:
+                del self._dirty_list[f_id]

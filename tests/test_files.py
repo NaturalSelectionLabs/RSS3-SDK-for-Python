@@ -1,3 +1,4 @@
+import json
 import re
 from datetime import datetime
 
@@ -5,6 +6,7 @@ import httpx
 import pytest
 
 from rss3 import RSS3, config
+from rss3.utils import id as utils_id
 
 now = datetime.utcnow().isoformat(timespec="milliseconds") + "Z"
 date_matcher = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$")
@@ -23,7 +25,6 @@ def test_new(rss3_fixture):
     assert new_file["version"] == config.version
     assert date_matcher.match(new_file["date_created"]) is not None
     assert date_matcher.match(new_file["date_updated"]) is not None
-    assert new_file["signature"] == ""
 
 
 @pytest.mark.asyncio
@@ -44,7 +45,7 @@ async def test_get_and_clear_cache(respx_mock, rss3_fixture):
     assert file["id"] == rss3_fixture.account.address
     assert file["version"] == config.version
     assert date_matcher.match(file["date_created"]) is not None
-    assert date_matcher.match(file["date_updated"]) is None
+    assert date_matcher.match(file["date_updated"]) is not None
     respx_mock.calls.assert_not_called()
 
     # Files obtained from the endpoint
@@ -101,7 +102,7 @@ async def test_set(rss3_fixture):
     assert file["id"] == test_id
     assert file["version"] == config.version
     assert date_matcher.match(file["date_created"]) is not None
-    assert date_matcher.match(file["date_updated"]) is None
+    assert date_matcher.match(file["date_updated"]) is not None
 
     # File size is too large error
     rss3_fixture.files.clear_cache("", True)
@@ -111,5 +112,59 @@ async def test_set(rss3_fixture):
         rss3_fixture.files.set(test_file)
 
 
-def test_sync(respx_mock, rss3_fixture):
-    ...
+@pytest.mark.asyncio
+async def test_sync(respx_mock, rss3_fixture):
+    respx_mock.put(f"https://test.io").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "id": utils_id.get_custom_items(rss3_fixture.account.address, 0),
+                "version": config.version,
+                "date_created": now,
+                "date_updated": now,
+                "signature": "",
+                "list": ["3"],
+            },
+        )
+    )
+
+    test_id = "0xC8b960D09C0078c18Dcbe7eB9AB9d816BcCa8944"
+    test_file = {
+        "id": test_id,
+        "version": config.version,
+        "date_created": now,
+        "date_updated": "",
+        "signature": "",
+    }
+    rss3_fixture.files.set(test_file)
+
+    test_id2 = "0x8768515270aA67C624d3EA3B98CA464672C50183"
+    test_file2 = {
+        "id": test_id2,
+        "version": config.version,
+        "date_created": now,
+        "date_updated": "",
+        "signature": "",
+    }
+    rss3_fixture.files.set(test_file2)
+
+    rss3_fixture.files.clear_cache(test_id)
+
+    await rss3_fixture.files.sync()
+
+    respx_mock.calls.assert_called_once()
+    files = json.loads(respx_mock.calls.last.request.content.decode())["files"]
+
+    file1 = files[0]
+    assert file1["id"] == rss3_fixture.account.address
+    assert date_matcher.match(file1["date_created"]) is not None
+    assert date_matcher.match(file1["date_updated"]) is not None
+    assert isinstance(file1["signature"], str)
+    assert file1["version"] == config.version
+
+    file2 = files[1]
+    assert file2["id"] == test_id2
+    assert date_matcher.match(file2["date_created"]) is not None
+    assert date_matcher.match(file2["date_updated"]) is not None
+    assert isinstance(file2["signature"], str)
+    assert file2["version"] == config.version
