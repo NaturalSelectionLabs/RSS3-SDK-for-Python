@@ -81,7 +81,42 @@ async def test_get_not_found_error(respx_mock, rss3_fixture):
 
 @pytest.mark.asyncio
 async def test_get_all(respx_mock, rss3_fixture):
-    ...
+    rss3_fixture.files.clear_cache("", True)
+
+    resp1 = httpx.Response(
+        200,
+        json={
+            "id": utils_id.get_custom_items(rss3_fixture.account.address, 1),
+            "version": config.version,
+            "date_created": now,
+            "date_updated": now,
+            "signature": "",
+            "list": ["1", "2"],
+            "list_next": utils_id.get_custom_items(rss3_fixture.account.address, 0),
+        },
+    )
+    resp2 = httpx.Response(
+        200,
+        json={
+            "id": utils_id.get_custom_items(rss3_fixture.account.address, 0),
+            "version": config.version,
+            "date_created": now,
+            "date_updated": now,
+            "signature": "",
+            "list": ["3"],
+        },
+    )
+    respx_mock.get(
+        f"https://test.io/{utils_id.get_custom_items(rss3_fixture.account.address, 1)}"
+    ).mock(return_value=resp1)
+    respx_mock.get(
+        f"https://test.io/{utils_id.get_custom_items(rss3_fixture.account.address, 0)}"
+    ).mock(return_value=resp2)
+
+    result = await rss3_fixture.files.get_all(
+        utils_id.get_custom_items(rss3_fixture.account.address, 1)
+    )
+    assert result == ["1", "2", "3"]
 
 
 @pytest.mark.asyncio

@@ -99,11 +99,6 @@ class File:
     async def get_all(self, file_id, breakpoint=None):
         list_ = []
         id_ = file_id
-        list_file = await self.get(id_)
-        if breakpoint and breakpoint(list_file):
-            return list_
-        list_.extend(list_file.get("list", []))
-        id_ = list_file.get("list_next")
         while id_:
             list_file = await self.get(id_)
             if breakpoint and breakpoint(list_file):
@@ -134,7 +129,6 @@ class File:
 
     async def sync(self):
         async def _sign(file_id):
-            print(self._list)
             content = self._list[file_id]
             await self._main.account.sign(content)
             if "auto" in content:
