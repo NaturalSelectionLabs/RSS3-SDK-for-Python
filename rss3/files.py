@@ -81,7 +81,30 @@ class File:
         if index < 0:
             index_file = await self._main.files.get(persona)
             if field in index_file:
-                ...
+                file_id = None
+                if id_:
+                    if isinstance(index_file[field], list):
+                        for item in index_file[field]:
+                            if item["id"] == id_:
+                                file_id = item.get("list")
+                                break
+                    else:
+                        file_id = index_file[field][id_]
+                else:
+                    file_id = index_file[field]
+                if not file_id:
+                    raise Exception(
+                        f"{field} {'id ' + id_ + '' if id_ else ''}does not exist"
+                    )
+                parsed = utils_id.parse(file_id)
+                return await self._main.files.get(
+                    utils_id.get(
+                        parsed["persona"],
+                        parsed["type"],
+                        parsed["index"] + index + 1,
+                        parsed.get("payload"),
+                    )
+                )
             else:
                 return None
         else:
