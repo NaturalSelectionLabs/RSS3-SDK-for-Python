@@ -10,7 +10,12 @@ def value_length(obj):
         return len(obj) <= config.max_value_length
 
     result = True
-    for key in obj:
+    if isinstance(obj, dict):
+        keys = list(obj.keys())
+    else:
+        keys = list(range(len(obj)))
+
+    for key in keys:
         if isinstance(obj[key], dict) and not value_length(obj[key]):
             result = False
             break
