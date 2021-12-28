@@ -29,5 +29,11 @@ def file_size(obj):
     to_be_obj = copy.deepcopy(obj)
     utils_object.remove_empty(to_be_obj)
     to_be_obj["signature"] = "0" * 132
-    b = json.dumps(to_be_obj).encode("utf8")
+    b = json.dumps(to_be_obj, separators=(",", ":")).encode("utf8")
     return len(b) <= config.file_size_limit
+
+
+def file_size_with_new(obj, new_item):
+    to_be_obj = copy.deepcopy(obj)
+    to_be_obj["list"].insert(0, new_item)
+    return file_size(to_be_obj)
