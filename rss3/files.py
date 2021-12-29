@@ -42,9 +42,7 @@ class File:
 
             async with httpx.AsyncClient() as client:
                 try:
-                    res = await client.get(
-                        f"{self._main.options['endpoint']}/{file_id}"
-                    )
+                    res = await client.get(f"{self._main.options['endpoint']}/{file_id}")
                     res.raise_for_status()
                     content = res.json()
                     # todo: verify content shape
@@ -93,9 +91,7 @@ class File:
                 else:
                     file_id = index_file[field]
                 if not file_id:
-                    raise Exception(
-                        f"{field} {'id ' + id_ + '' if id_ else ''}does not exist"
-                    )
+                    raise Exception(f"{field} {'id ' + id_ + '' if id_ else ''}does not exist")
                 parsed = utils_id.parse(file_id)
                 return await self._main.files.get(
                     utils_id.get(
@@ -110,14 +106,10 @@ class File:
         else:
             if id_:
                 return await self._main.files.get(
-                    utils_id.get(
-                        persona, "list", index, [field, id_.replace("list_", "")]
-                    )
+                    utils_id.get(persona, "list", index, [field, id_.replace("list_", "")])
                 )
             else:
-                return await self._main.files.get(
-                    utils_id.get(persona, "list", index, [field])
-                )
+                return await self._main.files.get(utils_id.get(persona, "list", index, [field]))
 
     async def get_all(self, file_id, breakpoint=None):
         list_ = []
