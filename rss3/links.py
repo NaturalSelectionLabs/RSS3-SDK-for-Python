@@ -103,11 +103,15 @@ class Links:
         links_index = position["index"]
         if file_id:
 
-            def _bk(file):
-                return file.get("list") and file["list"].index(persona_id) > -1
+            def _bk(f):
+                return f.get("list") and (persona_id in f["list"])
 
             list_ = await self.get_list(self._main.account.address, id_, _bk)
-            index = list_.index(persona_id)
+            try:
+                index = list_.index(persona_id)
+            except ValueError:
+                index = -1
+
             if index == -1:
                 self._main.files.clear_cache(utils_id.get_backlinks(persona_id, id_, ""), True)
                 file = await self._main.files.get(file_id)
@@ -115,7 +119,9 @@ class Links:
                     file["list"] = []
 
                 if not utils_check.file_size_with_new(file, persona_id):
-                    new_id = utils_id.get_links(self._main.account.address, id_, utils_id.parse(file["id"]))
+                    new_id = utils_id.get_links(
+                        self._main.account.address, id_, utils_id.parse(file["id"])["index"] + 1
+                    )
                     new_file = self._main.files.new(new_id)
                     new_file["list"] = [persona_id]
                     new_file["list_next"] = file["id"]
@@ -126,7 +132,7 @@ class Links:
                 else:
                     file["list"].insert(0, persona_id)
                     self._main.files.set(file)
-                await self._main.files.set(file)
+                self._main.files.set(file)  # js await ?
                 return file
             else:
                 raise Exception("Link already exist")

@@ -1,3 +1,5 @@
+import copy
+import json
 from datetime import datetime
 
 import httpx
@@ -118,6 +120,25 @@ async def test_patch_list_tags(mock):
     ]
 
 
+# fixme: can not pass test
 @pytest.mark.asyncio
 async def test_post(mock):
-    ...
+    file = await rss3_instance.links.get_list_file(rss3_instance.account.address, "test")
+    file = copy.deepcopy(file)
+    file["signature"] = "0" * 132
+    links = []
+    i = 4
+    while len(json.dumps(file)) < 1024:  # fixme: use config.file_size_limit
+        new_link = str(i)
+        file["list"].insert(0, new_link)
+        links.append(new_link)
+        i += 1
+
+    for lk in links:
+        await rss3_instance.links.post("test", lk)
+
+    result = await rss3_instance.links.get_list_file(rss3_instance.account.address, "test", -1)
+    assert result["id"] == utils_id.get_links(rss3_instance.account.address, "test", 2)
+    last_list = await rss3_instance.links.get_list_file(rss3_instance.account.address, "test")
+    assert last_list["id"] == utils_id.get_links(rss3_instance.account.address, "test", 2)
+    assert len(last_list["list"]) == 1
