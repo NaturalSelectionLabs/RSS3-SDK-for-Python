@@ -7,7 +7,8 @@ class Backlinks:
         self._type = type_
 
     async def _get_item(self, item_id):
-        return await self._main.items[self._type].get(item_id)
+        attr_type = getattr(self._main.items, self._type)
+        return await attr_type.get(item_id)
 
     async def _get_position(self, item_id, id_):
         item = await self._get_item(item_id)

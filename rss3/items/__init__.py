@@ -1,6 +1,6 @@
 from rss3.items.auto import AutoItems
 from rss3.items.custom import CustomItems
-
+from rss3.items.backlinks import Backlinks
 
 class Items:
     def __init__(self, main):
