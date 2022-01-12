@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "rss3"
 version = "0.3.0"
-description = ""
-authors = ["jukanntenn <jukanntenn@outlook.com>"]
+description = "Python SDK for RSS3-Hub."
+authors = ["Leetao <leetao94cn@gmail.com>", "jukanntenn <jukanntenn@outlook.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
