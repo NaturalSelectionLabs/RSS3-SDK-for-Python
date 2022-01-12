@@ -24,7 +24,7 @@ class AutoItems:
     async def _get_position(self, item_id):
         result = {"file": None, "index": -1}
 
-        def _bk(file):
+        def _bp(file):
             nonlocal result
             if not file.get("list"):
                 return False
@@ -41,7 +41,7 @@ class AutoItems:
             else:
                 return False
 
-        await self.get_list(self._main.account.address, _bk)
+        await self.get_list(self._main.account.address, _bp)
         return result
 
     async def get(self, item_id):
