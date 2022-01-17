@@ -7,7 +7,7 @@ class CustomAssets:
         self._main = main
 
     async def get_list_file(self, persona, index=-1):
-        return self._main.files.get_list(persona, "assets", index, "list_custom")
+        return await self._main.files.get_list(persona, "assets", index, "list_custom")
 
     async def get_list(self, persona, breakpoint=None):
         index_file = await self._main.files.get(persona)
