@@ -52,8 +52,8 @@ class CustomItems:
         return result
 
     async def get(self, item_id):
-        position = self._get_position(item_id)
-        if position["index"] == -1:
+        position = await self._get_position(item_id)
+        if position["index"] != -1:
             return position["file"]["list"][position["index"]]
         else:
             return None
@@ -105,7 +105,7 @@ class CustomItems:
                 index_file["items"]["list_custom"] = new_id
                 self._main.files.set(index_file)
             else:
-                file["list"].insert(0)
+                file["list"].insert(0, item)
                 self._main.files.set(file)
 
             return item
