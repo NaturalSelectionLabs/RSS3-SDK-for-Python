@@ -45,8 +45,7 @@ class CustomAssets:
         return result
 
     async def post(self, asset):
-        # todo: verify asset shape
-        if utils_check.value_length(asset):
+        if utils_check.value_length(asset) and isinstance(asset, str):
 
             def _bk(f):
                 return f.get("list") and (asset in f["list"])
