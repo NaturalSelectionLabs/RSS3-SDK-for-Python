@@ -23,6 +23,11 @@ class ItemPost(RSS3CustomItem):
         }
 
 
+class ItemPatch(RSS3CustomItem):
+    date_created: Optional[str]
+    date_updated: Optional[str]
+
+
 class CustomItems:
     def __init__(self, main):
         self._main = main
@@ -137,8 +142,14 @@ class CustomItems:
             raise Exception("Parameter error")
 
     async def patch(self, item_in):
-        # todo: verify obj shape
-        if utils_check.value_length(item_in):
+        try:
+            ItemPost(**item_in)
+        except ValidationError:
+            valid_shape = False
+        else:
+            valid_shape = True
+
+        if utils_check.value_length(item_in) and valid_shape:
             position = await self._get_position(item_in["id"])
 
             if position["index"] != -1:
