@@ -1,9 +1,26 @@
 import copy
 from datetime import datetime
+from typing import Optional
+
+from pydantic import ValidationError
 
 from rss3.items.backlinks import Backlinks
+from rss3.models import RSS3CustomItem, RSS3CustomItemID
 from rss3.utils import check as utils_check
 from rss3.utils import id as utils_id
+
+
+class ItemPost(RSS3CustomItem):
+    date_created: Optional[str]
+    date_updated: Optional[str]
+    id: Optional[RSS3CustomItemID]
+
+    class Config:
+        fields = {
+            "date_created": {"exclude": True},
+            "date_updated": {"exclude": True},
+            "id": {"exclude": True},
+        }
 
 
 class CustomItems:
@@ -59,9 +76,15 @@ class CustomItems:
             return None
 
     async def post(self, item_in):
-        # todo: verify obj shape
-        if utils_check.value_length(item_in):
-            file = await self.get_list_file(self._main.account.address, 0)
+        try:
+            ItemPost(**item_in)
+        except ValidationError:
+            valid_shape = False
+        else:
+            valid_shape = True
+
+        if utils_check.value_length(item_in) and valid_shape:
+            file = await self.get_list_file(self._main.account.address, -1)
             if not file:
                 new_id = utils_id.get_custom_items(self._main.account.address, 0)
                 file = self._main.files.new(new_id)
@@ -70,6 +93,7 @@ class CustomItems:
                 if not index_file.get("items"):
                     index_file["items"] = {}
                 index_file["items"]["list_custom"] = new_id
+                self._main.files.set(index_file)
 
             if file.get("list") is None:
                 file["list"] = []

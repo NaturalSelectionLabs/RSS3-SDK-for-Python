@@ -34,7 +34,7 @@ index_file = {
 }
 
 items1_file = {
-    "id": utils_id.get_custom_assets(rss3_instance.account.address, 1),
+    "id": utils_id.get_custom_items(rss3_instance.account.address, 1),
     "version": config.version,
     "date_created": now,
     "date_updated": now,
@@ -101,15 +101,14 @@ async def test_get(mock):
     assert result == item_test
 
 
-# fixme: can not pass
 @pytest.mark.asyncio
-async def test_post(mock):
+async def test_post(mock, respx_mock):
     file = await rss3_instance.items.custom.get_list_file(rss3_instance.account.address)
     file = copy.deepcopy(file)
     file["signature"] = "0" * 132
     items = []
     i = 2
-    while len(json.dumps(file)) < 1024:  # fixme: use config.file_size_limit
+    while len(json.dumps(file)) < config.file_size_limit:
         file["list"].insert(
             0,
             {
@@ -138,6 +137,7 @@ async def test_post(mock):
             "sign": signer1.sign_message,
         }
     )
+    respx_mock.get(f"https://test.io/{signer1.address}").mock(return_value=httpx.Response(404, json={"code": 5001}))
     await rss3_instance1.items.custom.post({"title": "Test"})
     result = await rss3_instance1.files.get()
     assert result["items"]["list_custom"] == utils_id.get_custom_items(rss3_instance1.account.address, 0)
