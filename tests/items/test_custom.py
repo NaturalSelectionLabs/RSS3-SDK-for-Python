@@ -108,7 +108,7 @@ async def test_post(mock, respx_mock):
     file["signature"] = "0" * 132
     items = []
     i = 2
-    while len(json.dumps(file)) < config.file_size_limit:
+    while len(json.dumps(file, separators=(",", ":")).encode("utf8")) < config.file_size_limit:
         file["list"].insert(
             0,
             {

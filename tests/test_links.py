@@ -66,6 +66,9 @@ def mock(respx_mock):
     respx_mock.get(f"https://test.io/{utils_id.get_links(rss3_instance.account.address, 'test', 0)}").mock(
         return_value=httpx.Response(200, json=links0_file)
     )
+    respx_mock.get(f"https://test.io/{utils_id.get_links(rss3_instance.account.address, 'test1', 0)}").mock(
+        return_value=httpx.Response(404, json={"code": 5001})
+    )
     yield respx_mock
 
 
@@ -120,7 +123,6 @@ async def test_patch_list_tags(mock):
     ]
 
 
-# fixme: can not pass test
 @pytest.mark.asyncio
 async def test_post(mock):
     file = await rss3_instance.links.get_list_file(rss3_instance.account.address, "test")
@@ -128,11 +130,11 @@ async def test_post(mock):
     file["signature"] = "0" * 132
     links = []
     i = 4
-    while len(json.dumps(file)) < 1024:  # fixme: use config.file_size_limit
+    while len(json.dumps(file, separators=(",", ":")).encode("utf8")) < config.file_size_limit:
         new_link = str(i)
+        i += 1
         file["list"].insert(0, new_link)
         links.append(new_link)
-        i += 1
 
     for lk in links:
         await rss3_instance.links.post("test", lk)

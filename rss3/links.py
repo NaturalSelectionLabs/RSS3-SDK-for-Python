@@ -1,5 +1,16 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, ValidationError
+
+from rss3.models import RSS3ID
 from rss3.utils import check as utils_check
 from rss3.utils import id as utils_id
+
+
+class LinksPost(BaseModel):
+    tags: Optional[List[str]]
+    id: str
+    list: Optional[List[RSS3ID]]
 
 
 class Links:
@@ -40,8 +51,14 @@ class Links:
             return []
 
     async def post_list(self, links):
-        # todo: verify shape
-        if utils_check.value_length(links):
+        try:
+            LinksPost(**links)
+        except ValidationError:
+            valid_shape = False
+        else:
+            valid_shape = True
+
+        if utils_check.value_length(links) and valid_shape:
             result = await self._get_position(self._main.account.address, links["id"])
             file = result["file"]
             index = result["index"]
@@ -82,8 +99,8 @@ class Links:
                 return links
 
     async def patch_list_tags(self, id_, tags):
-        # todo: verify shape
-        if utils_check.value_length(tags):
+        valid_shape = isinstance(tags, list) and all(isinstance(item, str) for item in tags)
+        if utils_check.value_length(tags) and valid_shape:
             result = await self._get_position(self._main.account.address, id_)
             file = result["file"]
             index = result["index"]
