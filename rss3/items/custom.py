@@ -143,7 +143,7 @@ class CustomItems:
 
     async def patch(self, item_in):
         try:
-            ItemPost(**item_in)
+            ItemPatch(**item_in)
         except ValidationError:
             valid_shape = False
         else:
