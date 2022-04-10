@@ -1,6 +1,9 @@
 import asyncio
 import copy
 
+from pydantic import ValidationError
+
+from rss3.models import RSS3Account
 from rss3.utils import check as utils_check
 from rss3.utils import object as utils_object
 
@@ -22,13 +25,17 @@ class Accounts:
     async def get_sig_message(self, account):
         acc = copy.deepcopy(account)
         acc["address"] = self._main.account.address
-        return await asyncio.get_event_loop().run_in_executor(
-            None, utils_object.stringify_obj, acc
-        )
+        return await asyncio.get_event_loop().run_in_executor(None, utils_object.stringify_obj, acc)
 
     async def post(self, account):
-        # todo: verify account shape
-        if utils_check.value_length(account):
+        try:
+            RSS3Account(**account)
+        except ValidationError:
+            valid_shape = False
+        else:
+            valid_shape = True
+
+        if utils_check.value_length(account) and valid_shape:
             file = await self._main.files.get(self._main.account.address)
             if "profile" not in file:
                 file["profile"] = {}

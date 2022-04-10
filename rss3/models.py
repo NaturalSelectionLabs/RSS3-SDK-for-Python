@@ -66,3 +66,16 @@ class RSS3AutoItem(RSS3ItemBase):
 
     id: RSS3AutoItemID = ...
     target: Target = ...
+
+
+class RSS3Account(BaseModel):
+    tags: Optional[List[str]]
+    id: str
+    signature: Optional[str]
+
+
+class RSS3Profile(BaseModel):
+    name: Optional[str]
+    avatar: Optional[ThirdPartyAddress]
+    bio: Optional[str]
+    accounts: Optional[List[RSS3Account]]

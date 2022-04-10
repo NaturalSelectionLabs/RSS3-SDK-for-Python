@@ -1,8 +1,10 @@
 import httpx
+from pydantic import ValidationError
 
 from rss3.utils import check as utils_check
 from rss3.utils import object as utils_object
 
+from ..models import RSS3Profile
 from .accounts import Accounts
 
 
@@ -18,8 +20,14 @@ class Profile:
         return file.get("profile", {})
 
     async def patch(self, profile):
-        # todo: verify profile shape
-        if utils_check.value_length(profile):
+        try:
+            RSS3Profile(**profile)
+        except ValidationError:
+            valid_shape = False
+        else:
+            valid_shape = True
+
+        if utils_check.value_length(profile) and valid_shape:
             file = await self._main.files.get(self._main.account.address)
             file["profile"].update(profile)
             utils_object.remove_empty(file["profile"], {"obj": file, "key": "profile"})
