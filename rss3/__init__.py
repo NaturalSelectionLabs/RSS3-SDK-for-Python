@@ -1,23 +1,19 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-"""
-@File    :   __init__.py    
-@Contact :   leetao94cn@gmail.com
-@Description：
-@Modify Time      @Author    @Version    @Description
-------------      -------    --------    -----------
-2021/6/21 9:43 下午   leetao      1.0         None
-"""
+from rss3.account import Account
+from rss3.assets import Assets
+from rss3.backlinks import Backlinks
+from rss3.files import File as Files
+from rss3.items import Items
+from rss3.links import Links
+from rss3.profile import Profile
 
-# import lib
 
-from .src.exceptions import *
-from .src.file import File
-from .src.link import Link
-from .src.links import Links
-from .src.item import Item
-from .src.items import Items
-from .src.persona import Persona
-from .src.profile import Profile
-from .src.index import RSS3, IOptions
-from .interface import *
+class RSS3:
+    def __init__(self, options):
+        self.options = options
+        self.files = Files(self)
+        self.account = Account(self)
+        self.profile = Profile(self)
+        self.items = Items(self)
+        self.links = Links(self)
+        self.backlinks = Backlinks(self)
+        self.assets = Assets(self)
